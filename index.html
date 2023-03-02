@@ -24,17 +24,17 @@
     </div>
   </nav>
 
-  <div class="container">
+  <div class="container" id="lista-filmes">
     <button class="btn btn-lg btn-success mt-3" onclick="getFilmes()">coisa</button>
 
-    <div class="row mt-3">
-      <div class="col filme">
+    
+      <!-- <div class="col filme">
         <h2>Titulo:</h2><br>
         <p><strong>Descrição:</strong></p>
         <p><strong>Genero:</strong></p>
         <p><strong>Elenco:</strong></p>
         <p><strong>Data de estreia:</strong></p>
-      </div>
+      </div> -->
     </div>
 
   </div>
@@ -59,18 +59,52 @@
         console.log("readystate 4 e status 200 sucesso")
         console.log(ajax.readyState)
         // console.log('filmes')
-        divFilme = document.querySelector('.filme')
+        
+        // divFilme = document.querySelector('.filme')
         // divFilme.style.background = "purple"
         // divFilmes.style.background = "red"
         let filmesJson = ajax.responseText
-        divFilme.innerHTML = filmesJson
         
         let objFilmesJson = JSON.parse(filmesJson)
         console.log( objFilmesJson)
+        // console.log(filmes)
+        
+        for (let i in objFilmesJson.filmes) {
+          let divFilme = document.createElement('div')
+          let filmes = objFilmesJson.filmes[i]
+          
+          let elenco=''
+          for (const i in filmes.elenco) {
+            if(elenco){
+              elenco+= ', '
+            }
+            elenco += filmes.elenco[i].ator
+            console.log(elenco)
+          }
 
-      }
+          let genero = ''
+          for(const i in filmes.generos){
+            if(genero){ genero+= ', '}
+            genero+= filmes.generos[i].genero
+          }
 
-    }
+          divFilme.innerHTML =
+          '<div class="row mt-3">'+
+          '<div class="col filme">'+
+            '<h2>'+filmes.titulo+'</h2><br>'+
+            '<p><strong>Descrição: </strong>'+filmes.resumo+'</p>'+
+            '<p><strong>Elenco: </strong>'+elenco+'</p>'+
+            '<p><strong>Gênero: </strong>'+genero+'</p>'+
+            '<p><strong>Data de estreia: </strong>'+filmes.dataLancamento.data+' ('+filmes.dataLancamento.pais+')</p>'+
+          '</div>'+
+          '</div>'
+
+          document.querySelector('#lista-filmes').appendChild(divFilme)
+        }//for loop
+
+      }//status4 e readystate 200
+
+    }//readystateonchange
 
   }
 
